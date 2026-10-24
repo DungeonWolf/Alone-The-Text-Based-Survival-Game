@@ -70,28 +70,29 @@ def Start_Game():
         else:
             print(f"\nYour choice is unrecognized or repeated, please try again.\n") # Resets the loop because the user's input was incorrect or repeated.
     
-Start_Game()
+Start_Game() # Calls the start game function, used for testing right now and anyone who wants to try out picking items from a few options.
 
 class Command_System:
-
-    def __init__(self, command_list):
-        self.command_list = command_list
-
+    # Initializes the parts of the command system class. Unfinished.
+    def __init__(self, command_list): 
+        self.command_list = command_list # Initializes a variable for the class to reference to.
+    # A function that the class can use to display all of the usable commands to interact with the world.
     def display_commands(self):
-        print("Available Commands:")
-        for command in self.command_list:
-            print(f"- {command}")
-
-    def enter_command(self, command):
-        if command in self.command_list:
+        print("Available Commands: -") # Do I need to explain?
+        for command in self.command_list: # Loops through the commands in the provided list from before in the class.
+            print(f" {command} -") # Prints out each command. Ex:        Available Commands: - Move - Forage - Build - Rest - Use -
+    # A function that will let the user enter the commands that are listed or available.
+    def enter_command(self):
+        command = input() # Stores the user's command option in this variable.
+        if command in self.command_list: # Checks if the command entered is one from the command list.
             print() # Use preset outcomes of commands and enter them here. Come back later.
         else:
-            print("Action not recognized, please refer to command list.")
+            print("Action not recognized, please refer to command list.") # If the entered command from the user's input before is incorrect in some way, it prompts the user to make sure it is a usuable command.
 
-# Class that acts as the template for different bar displays. I don't know why I called it scale_display and not bar_display.
+# Class that acts as the template for different bar displays.
 # Bar Example:   Full Bar: █████ 50 / 50   Half Bar: ██▒░░ 25 / 50   Low Bar: ▒░░░░ 5 / 50
 
-class Scale_Display:
+class Bar_Display:
 
     # Initialization of different variables needed for the displays.
     def __init__(self, name: str, max_value: int, current_value: int, bar_length: int):
@@ -122,14 +123,14 @@ class Scale_Display:
         final_bar = (filled_char * filled_length) + (half_char * half_length) + (empty_char * empty_length)
         print(f"{self.name}: {final_bar} {self.current_value} / {self.max_value}")
 
-    # Test of Initialized Variables
+    # Test of Initialized Variables for the Bar class above
     def testing(self):
         print(f"{self.name} has a maximum {self.name} of {self.max_value} and a current {self.name} of {self.current_value}.")
 
 # Example of Bars
-    # Hunger_Bar = Scale_Display("Hunger", max_player_hunger, current_player_hunger, 5)
-    # Health_Bar = Scale_Display("Health", max_player_health, current_player_health, 5)
-    # Thirst_Bar = Scale_Display("Thirst", max_player_thirst, current_player_thirst, 5)
+    # Hunger_Bar = Bar_Display("Hunger", max_player_hunger, current_player_hunger, 5)
+    # Health_Bar = Bar_Display("Health", max_player_health, current_player_health, 5)
+    # Thirst_Bar = Bar_Display("Thirst", max_player_thirst, current_player_thirst, 5)
 # Output of the Example Bars
     # Hunger_Bar.display_bar() # Outputs "Hunger: █░░░░ 10 / 50"
     # Health_Bar.display_bar() # Outputs "Health: ██▒░░ 25 / 50"
@@ -188,3 +189,7 @@ class Inventory:
 
     def __init__(self, collected_items):
         print()
+
+
+
+# Do I have too many comments?
