@@ -1,6 +1,11 @@
 import random
 
 
+# I believe that every user that reads this code or any other code I've written should make it's comments enjoyable and fun to read
+# every now and then. I will put a laugh here and there. Hope you like reading it and I hope most of the comments aren't too annoying
+# to read. There is a lot and it makes it cluttered, hope it isn't that bad though. :)
+
+
 # Health Stats (Testing)
 max_player_health = 50
 current_player_health = 25
@@ -37,6 +42,11 @@ chosen_items = [] # A list for keeping track of all of the items you have select
 new_line_reference = "\n" # A quick reference so I could add another line break in an f-string in which "\n" cannot work on it's own. It helps to separate all of the choices with the descriptions so it's easier to read.
 
 
+# Location Stuff (Testing)
+add_movement_x = 0 # Defines what tile you are on based on what this number is added to your current position on the x axis.
+add_movement_y = 0 # Same as above but for the y axis.
+
+
 class Command_System:
     # Initializes the parts of the command system class. Unfinished.
     def __init__(self, command_list): 
@@ -48,9 +58,26 @@ class Command_System:
             print(f" {command} -") # Prints out each command. Ex:        Available Commands: - Move - Forage - Build - Rest - Use -
     # A function that will let the user enter the commands that are listed or available.
     def enter_command(self):
-        command = input() # Stores the user's command option in this variable.
+        command = input().strip().upper() # Stores the user's command option in this variable.
         if command in self.command_list: # Checks if the command entered is one from the command list.
-            print() # Use preset outcomes of commands and enter them here. Come back later.
+            if command == "move":
+                while True:
+                    direction = input("Which Direction? Enter: North, South, East or West").strip().upper() # Takes the user's input and saves it in a variable for use below to see if the player wants to move north, south, east or west.
+                    if direction == "north": # Checks if the user chose north
+                        add_movement_y += 1
+                        break # Stops loop
+                    elif direction == "south": # Checks if the user chose south
+                        add_movement_y -= 1
+                        break # Also stops loop
+                    elif direction == "east": # Checks if the user chose east
+                        add_movement_x -= 1
+                        break # I hope it stops the loop
+                    elif direction == "west": # Checks if the user chose west
+                        add_movement_x += 1
+                        break # It better stop the loop
+                    else: # Checks if the user screwed up.
+                        print("Something didn't work or command not valid, try again.")
+                    # Come back, need to work on finding a way to display where you moved afterwards.
         else:
             print("Action not recognized, please refer to command list.") # If the entered command from the user's input before is incorrect in some way, it prompts the user to make sure it is a usuable command.
 
@@ -60,7 +87,7 @@ command_system_start = Command_System(command_list)
 
 
 # Class that acts as the template for different bar displays.
-# Bar Example:   Full Bar: █████ 50 / 50   Half Bar: ██▒░░ 25 / 50   Low Bar: ▒░░░░ 5 / 50
+# Bar Example:   Full Bar: ▓▓▓▓▓ 50 / 50   Half Bar: ▓▓▒░░ 25 / 50   Low Bar: ▒░░░░ 5 / 50
 
 
 class Bar_Display:
@@ -76,7 +103,7 @@ class Bar_Display:
     # Main Function of Scale_Display for making the actual displayed bar.
     def display_bar(self):
         # Special Characters Used for Building the Bar
-        filled_char = chr(0x2588) # █
+        filled_char = chr(0x2593) # ▓
         half_char = chr(0x2592) # ▒ 
         empty_char = chr(0x2591) # ░
         # A number that will be used for converting the current_value into a number with a decimal at the end.
@@ -90,7 +117,7 @@ class Bar_Display:
             half_length = 1
         else:
             half_length = 0
-        # Adds up what the bar will output at the end of the calculations. Ex: ██▒░░
+        # Adds up what the bar will output at the end of the calculations. Ex: ▓▓▒░░
         final_bar = (filled_char * filled_length) + (half_char * half_length) + (empty_char * empty_length)
         print(f"{self.name}: {final_bar} {self.current_value} / {self.max_value}")
 
@@ -104,9 +131,9 @@ class Bar_Display:
     # Health_Bar = Bar_Display("Health", max_player_health, current_player_health, 5)
     # Water_Bar = Bar_Display("Water", max_player_water, current_player_water, 5)
 # Output of the Example Bars
-    # Hunger_Bar.display_bar() # Outputs "Hunger: █░░░░ 10 / 50"
-    # Health_Bar.display_bar() # Outputs "Health: ██▒░░ 25 / 50"
-    # Water_Bar.display_bar() # Outputs "Water: ████▒ 45 / 50"
+    # Hunger_Bar.display_bar() # Outputs "Hunger: ▓░░░░ 10 / 50"
+    # Health_Bar.display_bar() # Outputs "Health: ▓▓▒░░ 25 / 50"
+    # Water_Bar.display_bar()   # Outputs "Water: ▓▓▓▓▒ 45 / 50"
 
 
 class Map:
@@ -160,6 +187,7 @@ class Animal:
 
 
 # Animal Stuff (Testing)
+# All animals below are an instance of the Animal class above.
 rabbit = Animal("Rabbit", "A small jumping animal that is very fast and agile. A good snare will catch them.", 5, 1)
 mink = Animal("Mink", "A small and sneaky creature that is found near water and scavenges for food near it's home.", 6, 3)
 pine_martin = Animal("Pine Martin", "A small creature that is similar to the mink and known for it's mischief. They are commonly found in trees and will go a long way to find food. You cannot kill them.", 6, 3)
@@ -168,8 +196,9 @@ wolf = Animal("Wolf", "A medium to large sized creature that is attracted to the
 bear = Animal("Bear", "A large creature that is very protective of their cubs, they are very agressive creatures and will probably attack you at the first sight they get.", 40, 30)
 moose = Animal("Moose", "A large and usually passive creature, but if you get too close, they will attack.", 35, 30)
 mountain_lion = Animal("Mountain Lion", "A medium sized creature similar to wolves but usually travel alone and stalk their prey", 25, 30)
-harmless_animals = [rabbit, mink, pine_martin, crow]
-dangerous_animals = [wolf, bear, moose, mountain_lion]
+# Each List below stores whether each animal defined above is harmless or harmful. (Animals most likely to attack / not that are dangerous / not)
+harmless_animals = [rabbit, mink, pine_martin, crow] # Harmless animals are the animals that can be a food source or just a nuisance that steals your food when you're not looking.
+dangerous_animals = [wolf, bear, moose, mountain_lion] # Dangerous animals that will attack you at first sight. You have the ability to hunt and kill them, but they are very, very, dangerous.
 
 
 class Player:
@@ -179,22 +208,52 @@ class Player:
         self.hunger = hunger
         self.water = water
         self.sanity = sanity
-
+    # Drains the player's health attribute.
     def drain_health(self, damage):
         self.health -= damage
-
+    # Drains the player's hunger attribute.
     def drain_hunger(self, food_drain):
         self.hunger -= food_drain
-
+    # Drains the player's water attribute.
     def drain_water(self, thirst):
         self.water -= thirst
-
+    # Drains the player's sanity attribute.
     def drain_sanity(self, sanity_drain):
         self.sanity -= sanity_drain
 
+    def player_start_location(self):
+        start_location = map[player_start_location_x][player_start_location_y] # Calculates the player's start location (The middle of the randomly generated map.)
+        if start_location == 0: # What returns when you start in a forest tile.
+            return "\nAll you can see around you is thick dense foliage and trees that seem to touch the sky. You start in a forest.\n"
+        elif start_location == 1: # What returns when you start in a grassy tile.
+            return "\nTall grass surrounds you and a small rabbit scurries past your feet. You start in a grassy field.\n"
+        elif start_location == 2: # What returns when you start in a water tile.
+            return "\nYour feet are soaked in cold water. You start on the shore of a lake.\n"
+        else: # What returns if there is some error and you somehow didn't spawn in a tile?? If you did this, you broke my game somehow.
+            return "\nError occured. Please exit game and restart.\n"
+
+    def player_location_explanation(self):
+        if self.player_location == 0:
+            return "\nYou are now in a forest.\n"
+        elif self.player_location == 1:
+            return "\nYou are now in a grassy field.\n"
+        elif self.player_location == 2:
+            return "\nYou are now on the edge of a lake.\n"
+        else:
+            return "\nGame Broke. What happened??\n"
+
     def player_location(self):
         start_location = map[player_start_location_x][player_start_location_y]
+        new_current_location = start_location[add_movement_x][add_movement_y]
+        return new_current_location
 
+
+add_movement_x
+add_movement_y
+
+
+# Player Creation (Testing)
+player_initialization = Player(50, 40, 50, 50) # 50 Health, 40 Hunger, 50 Water and 50 Sanity.
 
 
 class Inventory:
@@ -205,7 +264,7 @@ class Inventory:
 
 def Start_Game():
     print("\nYou have just dropped into a world of wilderness. \nYou will be alone for the foreseeable future, and you must survive out here for as long as you can. \nIn the end, you will win a prize of up to 1 million dollars. \nGood luck and try not to die.") # Opening introduction to the world.
-    print() # Says where you are based on current tile, come back to this later.
+    print(player_initialization.player_location()) # Says where you are based on current tile.
     print(f"You look in your bag. What items did you choose to bring? Enter your first item choice: \n\n{new_line_reference.join(starting_item_choices)} \n\n(Type {starting_item_name_choices[0].capitalize()}, {starting_item_name_choices[1].capitalize()}, {starting_item_name_choices[2].capitalize()}, {starting_item_name_choices[3].capitalize()} or {starting_item_name_choices[4].capitalize()}.)\n") # More of the introduction and what your options are for what supplies you have brought with you on your survival expedition.
     while True: # Loops the if statement, so if it goes to else, it will loop back until the criteria is met.
         starting_item_response = input().strip().lower() # Saves the user's response in a variable and gets rid of uppercase letters along with spaces.
@@ -244,7 +303,8 @@ def Start_Game():
     print(f"In your bag, you brought with you: \n{new_line_reference.join(chosen_inventory)}")
 
 
-Start_Game() # Calls the start game function, used for testing right now and anyone who wants to try out picking items from a few options.
+# Calls the start game function, used for testing right now and anyone who wants to try out picking items from a few options.
+Start_Game() 
 
 
 # Do I have too many comments?
